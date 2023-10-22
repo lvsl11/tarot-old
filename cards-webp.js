@@ -222,7 +222,7 @@ let items = {
 			funcToAdd.addButton('https://solidbackup.wordpress.com/2020/06/05/adjustment-old-name-justice/')
 	},
 	"Hermit": {
-		"normal": "/hermit.webp",
+		"normal": "hermit.webp",
 		"inverted": cards.major + "hermit-invert.jpg",
 		"description": `While people might have messages and internet posts, or even books they have written you can buy, anything that involves pondering and deep thinking must be done alone. However, the Hermit’s extent of reach does not only involve that, but also involves the extent of somebody being *truly* on their own. Otherwise, even with time alone at home studying, but at the same time being with other people at day time, that cannot be called truly alone.<br><br>` + 
 			`Therefore not only the Hermit ponders and walk alone, but his mind *and* his thoughts are alone, free from the influences from people nor the crowd. He is truly a figure that not only thinks alone but lives alone, enablng him to be truly independent to the physical and spiritual influences that comes from a group. As a result, preventing himself and excluding himself from anything that distracts him to “go with the flow” of any type of group that others strive to find and belong.<br><br>` +
@@ -283,7 +283,7 @@ let items = {
 			funcToAdd.addButton('https://solidbackup.wordpress.com/2020/05/19/tower/')
 	},
 	"Star": {
-		"normal": "https://lvslprogramming.files.wordpress.com/2023/10/star.webp" ,
+		"normal": "star.webp" ,
 		"inverted": cards.major + `star-invert.jpg`,
 		"description": `When one set out the journey to the Earth, it is said that whatever they in the Astral wanted to put into, as either a proof, or just theories turning into concepts, are said to have huge possibilities. These possibilities are said to be anything that surpasses anything that souls have already died or are not allowed to reincarnate can do. This is not the direct power of hope. Instead, this is a a divine power of how much and how deep it can even offer.<br><br>` + 
 			`At the same time, the blossom of the blood of life, as well as the inside bread and butter, is a promise that we’ve made with the Universe when we were given a life to live, be it in Astral or in Mundane. The Astral is a place where conceptual reality exists, and the Mundane is where it turns to Solid. When we move on from one stage to the other, we are going more and more closer to the Earth. This is, Earth as the Soil, as well as Earth as a planet, but the first one is more important than the second. This is because what we are talking here is a life that represents divinity, that flows like a river, from up from the Stars, to the grounds in the Earth, penetrating any soil on the ground for plants and animals to grow.<br><br>` + 

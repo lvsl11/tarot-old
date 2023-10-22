@@ -16,7 +16,7 @@
 			max-width:1000px;
 
 			font-family: Arial, Helvetica, sans-serif;
-			color:white;
+			color:black;
 
 			background-image: 'url("moon-bg-flatten2-invert-compress.jpg")';			
 		}
@@ -36,7 +36,7 @@
 
 		}
 		td {
-			font-size:16px;
+			font-size: 20px;
 			padding-top:2em;
 			padding-bottom: 2em;
 			min-height: 10em;
@@ -48,8 +48,6 @@
 			background-color: gray;
 		}
 		.jsButton {
-			color:white;
-			background-color: black;
 			margin:4px;
 			margin-left: 0px;
 			border: 3px solid violet;
@@ -70,7 +68,7 @@
 		<input type="text" id="noOfCards"><br>
 		
 		<label>Invert color:</label>
-		<input type="checkbox" id="isInvertColor" class="check" >
+		<input type="checkbox" id="isInvertColor" class="check" checked="true">
 		<br>
 		<label>Allow cards to repeat: </label>
 		<input type="checkbox" id="isRepeat" class="check" onclick="displayTestItems()">
@@ -90,14 +88,10 @@
 			);">
 			Submit
 		</button> 
-		<button style="display:none;">Reset</button> <button style="display:none" class="jsButton" onclick="displayItem(items)">Display all</button> 
-		<button class="jsButton" onclick="changeBGColor()">Lights on/off</button> 
-		<button style="display:none;">Reset</button> 
-		<button class="jsButton" onclick="displayDrawnCards()">Shuffle reversals (if reverse is on)</button><br>
-		<button class="jsButton" onclick="displayItem(items)">Display all cards</button><br>
+		<button style="display:none;">Reset</button> <button class="jsButton" onclick="displayItem(items)">Display all</button><br>
 
-		<button class="jsButton" onclick="location.reload(true)">Reload page (force reload)</button>
-		
+		<button class="jsButton" onclick="location.reload(true)">Force reload</button>
+		<button class="jsButton" onclick="changeBGColor()">Lights on/off</button>
 	</td></tr>
 	<tr><td id="cardsToDisplayMini">
 		<!-- Your tarot results will be displayed here -->
@@ -106,11 +100,11 @@
 	<tr><td id="cardToDisplay">
 		<!-- Your tarot results will be displayed here -->
 	</td></tr>
-			<script>document.body.style.backgroundImage = 'url("moon-bg-flatten2-compress.jpg")'</script>
+		<script>document.body.style.backgroundImage = 'url("moon-bg-flatten2-invert-compress.jpg")'</script>
 		<script src="draw-or-search.js"></script>
 		<script src="cards-webp.js"></script>
 		<script src="open-image-webp.js"></script>
-		<script></script>
+		<script src="detectOsBrowser.js"></script>
 		<script>
 			let drawOrSearch = new Searcher(items);
 			let submittedOnce = false;
@@ -140,7 +134,7 @@
 				console.log("cards drawn string: " + drawnResult);
 
 				// search for the specific item in items global
-				drawnItemsObj = {}; // string => object
+				let drawnItemsObj = {}; // string => object
 				let temp = "";
 				// spaces added to cards with same name to make them different
 				let sameCardNameRepeat = " "; 
@@ -222,6 +216,15 @@
 						itemObj[tarotName].description + '</td></tr>';
 					*/
 
+					
+					let tdSelect = document.getElementsByTagName('td');
+					for (let i = 3; i < tdSelect.length; i++) {
+					//	if (detectBrowser() && submittedOnce) {
+							tdSelect[i].style.fontSize = '14px';
+					//	}	
+					}
+					submittedOnce = true;
+
 					// display normal tarot and description
 					displayText = displayText + 
 						`<table><tr><td style='border-top:3px solid pink;border-bottom:3px solid pink;font-size:100%'>` +
@@ -239,7 +242,7 @@
 					topImage = topImage + openImage(itemObj[tarotName].normal, 1, 
 						'width:158px;height:240px;display:inline;filter:brightness(120%) contrast(131%);' + 
 						' ;border-radius: 12px;' + reverseCSS + isInvertColor(), true
-						) + " ";
+						)// + 
 					//" </td></tr>";
 
 					i++; // move to next item
@@ -275,7 +278,7 @@
 					 bodyBg.style.backgroundColor == "" ? 'black' : 'white';
 				// change text color
 				bodyBg.style.color = 
-					bodyBg.style.color == '' || bodyBg.style.color == "white" ? 'black' : 'white';
+					bodyBg.style.color == '' || bodyBg.style.color == "black" ? 'white' : 'black';
 
 				let linkColor = document.querySelectorAll('a');
 				// changeBGColore link color
@@ -290,23 +293,23 @@
 				let buttonColor = document.querySelectorAll('button');
 				for (let i = 0; i < buttonColor.length; i++) {
 					buttonColor[i].style.color = 
-						buttonColor[i].style.color == 'white' || buttonColor[i].style.color == ''
-						? 'black' : 'white';
-					buttonColor[i].style.backgroundColor = 
-						buttonColor[i].style.backgroundColor == 'black' || 
-						buttonColor[i].style.backgroundColor == "" 
+						buttonColor[i].style.color == 'black' || buttonColor[i].style.color == ''
 						? 'white' : 'black';
+					buttonColor[i].style.backgroundColor = 
+						buttonColor[i].style.backgroundColor == 'white' || 
+						buttonColor[i].style.backgroundColor == "" 
+						? 'black' : 'white';
 				}
 
 
 				// change serach box colors
 				let txtArea = document.getElementById('noOfCards');
 				txtArea.style.backgroundColor =
-					txtArea.style.backgroundColor == 'white' || 
-					txtArea.style.backgroundColor == '' ? 'black' : 'white';
+					txtArea.style.backgroundColor == 'black' || 
+					txtArea.style.backgroundColor == '' ? 'white' : 'black';
 				txtArea.style.color = 
-					txtArea.style.color == 'black' || txtArea.style.color == '' ?
-					'white' : 'black';
+					txtArea.style.color == 'white' || txtArea.style.color == '' ?
+					'black' : 'white';
 			}
 			
 		</script>
@@ -326,7 +329,7 @@
 				}
 				return isChromeAndrord;
 			}
-			
+
 			// for testing purpose 
 			let displayTestItemsCount = 5;
 			function displayTestItems() {

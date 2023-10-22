@@ -192,7 +192,7 @@ let items = {
 			funcToAdd.addButton('https://solidbackup.wordpress.com/2020/06/01/emperor/')
 	},
 	"Hierophant": {
-		"normal": "https://lvslprogramming.files.wordpress.com/2023/10/hierophant.webp",
+		"normal": "hierophant.webp",
 		"inverted": cards.major + "hierophant-invert.jpg",
 		"description": `Once something is deemed Superior and Divine, the type of Authority comes from it means that no old knowledge can be challenged. People within it had been wandering on and on to the same puddle they have formed either by themselves, or the Angel of Authority that supports such ideal. Mainly for their own interest only.<br><br>` +
 			`One’s Fall is always the same. It is because they lose the ability to doubt and destroy. Something in their heart became petrified, and the stone became so hard that even touching it will open wounds that are deep within if there is any, and directly wound the person if there wasn’t at the first place. There is something to hold on that cannot be let go, and that can take the form of an <strong style="font-weight='900';text-decoration:underline;">established religion</strong>.<br><br>` + 
@@ -206,7 +206,7 @@ let items = {
 			funcToAdd.addButton('https://solidbackup.wordpress.com/2020/06/04/lovers/')
 	},
 	"Chariot": {
-		"normal": "https://lvslprogramming.files.wordpress.com/2023/10/chariot.webp",
+		"normal": "chariot.webp",
 		"inverted": cards.major + "chariot-invert.jpg",
 		"description": `The Chariot is a Master, but also a servant. You can say that he does serve under His Master too, but such description is far from accurate. Rather say, he serves his own purpose within his own existence, and he is the one who sets things in motion all on his own, therefore a strong existence of what willpower really is.<br><br>` + 
 			`Under him are statues that represents the existence of what a lot of people would call the “ultimate Authority”, which in turn things they look up upon with both fear and reverence. They are the predators of the old times that had once ruled the world, and that does include the Human species themselves.<br><br>` + 

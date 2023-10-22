@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<style>
+		body {
+			background-size: 100% ;
+			background-color: black;
+			/*background-attachment: fixed;*/
+
+			padding:30px;
+
+			width:auto;	
+			min-width: 400px;
+			max-width:1000px;
+
+			font-family: Arial, Helvetica, sans-serif;
+			color:white;
+
+			background-image: 'url("moon-bg-flatten2-invert-compress.jpg")';			
+		}
+		img {display:block;}
+		a {color:green;}
+		
+		button {
+			font-size:14pt;
+			padding:5pt 10pt 5pt 10pt; /* hori, vert, hori, vert */
+			color: black;
+			background-color: white;
+		}
+		table {
+			border-collapse: collapse;
+			width:auto;
+			min-width:600px;
+
+		}
+		td {
+			font-size:16px;
+			padding-top:2em;
+			padding-bottom: 2em;
+			min-height: 10em;
+		}
+
+		.check {
+			width:1em;
+			height: 1em;
+			background-color: gray;
+		}
+		.jsButton {
+			color:white;
+			background-color: black;
+			margin:4px;
+			margin-left: 0px;
+			border: 3px solid violet;
+			border-radius: 15pt;
+		}
+		#reversalAbout {
+			display:none;
+		}
+	</style>
+	<title>Tarot card generator</title>
+</head>
+<body>
+	<img src="title.png"><br>
+	<img src="title-major-only.png" >
+	<table style="border-collapse:collapse;">
+	<tr><td style="padding-bottom: 0px;font-size: 110%">
+		<label>Number of tarot cards: </label>
+		<input type="text" id="noOfCards"><br>
+		
+		<label>Invert color:</label>
+		<input type="checkbox" id="isInvertColor" class="check" >
+		<br>
+		<label>Allow cards to repeat: </label>
+		<input type="checkbox" id="isRepeat" class="check" onclick="displayTestItems()">
+		<br>
+
+		<label>Allow reverse cards: </label>
+		<input type="checkbox" id="isCardReverse" class="check">
+	
+	</td></tr>
+	<tr><td style="padding-top: 17px">
+		<button class="jsButton" onclick="
+			let displayArea = document.getElementsByTagName('displayArea');
+			displayArea = drawCards(
+				document.getElementById('noOfCards'),
+				document.getElementById('isRepeat').checked, 
+				displayItem
+			);">
+			Submit
+		</button> 
+		<button style="display:none;">Reset</button> <button style="display:none" class="jsButton" onclick="displayItem(items)">Display all</button> 
+		<button class="jsButton" onclick="changeBGColor()">Lights on/off</button> 
+		<button style="display:none;">Reset</button> 
+		<button class="jsButton" onclick="displayDrawnCards()">Shuffle reversals (if reverse is on)</button><br>
+		<button class="jsButton" onclick="displayItem(items)">Display all cards</button><br>
+
+		<button class="jsButton" onclick="location.reload(true)">Reload page (force reload)</button>
+		
+	</td></tr>
+	<tr><td id="cardsToDisplayMini">
+		<!-- Your tarot results will be displayed here -->
+	</td></tr>
+
+	<tr><td id="cardToDisplay">
+		<!-- Your tarot results will be displayed here -->
+	</td></tr>
+			<script>document.body.style.backgroundImage = 'url("moon-bg-flatten2-compress.jpg")'</script>
+		<script src="draw-or-search.js"></script>
+		<script src="cards-webp.js"></script>
+		<script src="open-image-webp.js"></script>
+		<script></script>
+		<script>
+			let drawOrSearch = new Searcher(items);
+			let submittedOnce = false;
+			let drawnItemsObj = {}; // previous drawn cards
+			let isChromeAndrord = false;
+
+			// global
+			function displayDrawnCards() {
+				let isEmpty = true;
+				// if the loop can enter, it means the object isn't empty
+				for (let element in drawnItemsObj) {
+					isEmpty = false;
+					break; 
+				}
+				if (isEmpty) alert(`You have't drawn any tarots!!! Make sure you did not reload the previous page `);
+				displayItem(drawnItemsObj);
+			}
+
+			function drawCards(howMany, repeatSameCard, displayFunction) {
+
+				let noOfCards = howMany.value == "" || isNaN(parseInt(howMany.value)) ? 2 : parseInt(howMany.value);
+				let isRepeat = repeatSameCard; 
+
+				let drawnResult = drawOrSearch.drawCards(noOfCards, isRepeat); // the right cards drawn
+
+				// cards drawn from string array
+				console.log("cards drawn string: " + drawnResult);
+
+				// search for the specific item in items global
+				drawnItemsObj = {}; // string => object
+				let temp = "";
+				// spaces added to cards with same name to make them different
+				let sameCardNameRepeat = " "; 
+				for (let i = 0; i < drawnResult.length; i++) {
+					// if item searched is a repeat, ie it already exist within the object
+					if (drawnItemsObj[drawnResult[i]] != undefined) {
+						// add the item with a different name, which is 
+						// original + "(some spaces)"
+						temp = drawnResult[i] + sameCardNameRepeat;
+						drawnItemsObj[temp] = items[`${drawnResult[i]}`];
+
+						// add space to the original repeat-added spaces so that even if
+						// there exist a third repeat, that card will definitely have a
+						// different name anyways
+						sameCardNameRepeat = sameCardNameRepeat + " ";
+					} else {
+						// add the item directly using its own name via drawnResult
+						drawnItemsObj[`${drawnResult[i]}`] = items[`${drawnResult[i]}`];
+					}
+
+				}
+				
+				displayFunction(drawnItemsObj);
+			}
+
+			function displayItem(itemObj) {
+				let br = "<br>";
+				let displayArea = document.getElementById('cardToDisplay');
+				let topImageArea = document.getElementById('cardsToDisplayMini');
+				let displayText = ``; // the main tarot area with explaination
+				let topImage = ""; // the top thumbnail showing tarot cards being drawn
+
+				//displayText = `<table style="border-collapse:collapse;">`;
+				topImage = ``;//`<br><p>Tarot as it appears: </p>`;
+				let i = 0; // position counter for each tarot picked
+				for(let tarotName in itemObj) {
+					if (itemObj[tarotName] == undefined) {
+						let temp = "";
+						temp = tarotName.trim();
+						tarotName = temp;
+					}
+					console.log(tarotName);
+
+					// this adds a css tag depending on whether you want reversal or not, 
+					// if yes, a random result will be generated, and if its reversal, 
+					// it will add the css tag being returned to the display
+					// - if reversal is off, it will always return an empty string
+					let isReversal = function()  {
+						let cBox = document.getElementById('isCardReverse');
+						// do reversal only if the checkbox option for it is on
+						if (cBox.checked == true) {
+							let zeroOrOne = parseInt(Math.random()*2);
+							// ms-transform is for Internet Explorer, and the second is for other browsers
+							return zeroOrOne == 1 ? 
+								';-ms-transform: rotate(180deg);transform:rotate(180deg);' : 
+								'';	
+						}
+						else return '';;
+					};
+					let isInvertColor = function() {
+						let cBox = document.getElementById('isInvertColor');
+						if (cBox.checked == true) return ';filter:invert(100%);';
+						else return '';
+					};
+					let reverseCSS = isReversal();
+
+					// display tarot with description
+
+
+					/* using another format instead
+					displayText = displayText + '<tr><td style="vertical-align:top; padding-bottom: 10px">' + 
+						openImage(
+							itemObj[tarotName].normal, 1, 
+							'filter:brightness(120%) contrast(131%) ;border-radius: 23px;' 
+							+ reverseCSS + isInvertColor(), true
+						) + 
+						'</td>' + '<td style="padding:40px 10px 40px 20px;vertical-align:top;' + 
+						'border-top:3px solid pink;border-bottom:3px solid pink;">' +  "Position " + (i+1)  + ': ' + tarotName + '<br><br>' + 
+						itemObj[tarotName].description + '</td></tr>';
+					*/
+
+					// display normal tarot and description
+					displayText = displayText + 
+						`<table><tr><td style='border-top:3px solid pink;border-bottom:3px solid pink;font-size:100%'>` +
+						openImage(
+							itemObj[tarotName].normal, 1, // image location and size
+							`filter:brightness(120%) contrast(131%);` + // css
+							`float: right; margin: 1em 1em 2em 2em;display:inline;` +
+							reverseCSS + isInvertColor(), 
+							true // return image html code
+						) +  
+						`Position ${i+1}: ${tarotName}<br><br>` + 
+						`${itemObj[tarotName].description}</td></tr></table>`; 
+
+					// display tarot mini previews
+					topImage = topImage + openImage(itemObj[tarotName].normal, 1, 
+						'width:158px;height:240px;display:inline;filter:brightness(120%) contrast(131%);' + 
+						' ;border-radius: 12px;' + reverseCSS + isInvertColor(), true
+						) + " ";
+					//" </td></tr>";
+
+					i++; // move to next item
+				}
+	 
+				displayText = displayText + "</table>";
+				
+				//console.log(displayText);
+
+				displayArea.innerHTML = displayText;
+				topImageArea.innerHTML = topImage;
+
+				submittedOnce = true;
+			}
+		</script>
+
+		<script>
+			/* 
+			 */ 
+			function changeBGColor() {
+				let bodyBg = document.getElementsByTagName('body')[0];
+				let bodyBg2 = document.body;
+				// change background image
+				let url1 = `url("moon-bg-flatten2-invert-compress.jpg")`;
+				let url2 = `url("moon-bg-flatten2-compress.jpg")`;
+				let bgImage = bodyBg.style.backgroundImage;
+				document.body.style.backgroundImage = 
+					document.body.style.backgroundImage == "" || 
+					document.body.style.backgroundImage == url1 ? url2 : url1;
+				// change bg color
+				bodyBg.style.backgroundColor =
+					 bodyBg.style.backgroundColor == 'white' || 
+					 bodyBg.style.backgroundColor == "" ? 'black' : 'white';
+				// change text color
+				bodyBg.style.color = 
+					bodyBg.style.color == '' || bodyBg.style.color == "white" ? 'black' : 'white';
+
+				let linkColor = document.querySelectorAll('a');
+				// changeBGColore link color
+				for (let i = 0; i < linkColor.length; i++) {
+					document.querySelectorAll('a')[i].style.color =
+						document.querySelectorAll('a')[i].style.color == 'rgb(226, 94, 183)' || 
+						document.querySelectorAll('a')[i].style.color == "" ?
+						'rgb(29, 131, 72)' : 'rgb(226, 94, 183)';
+				}
+
+				// change buttons
+				let buttonColor = document.querySelectorAll('button');
+				for (let i = 0; i < buttonColor.length; i++) {
+					buttonColor[i].style.color = 
+						buttonColor[i].style.color == 'white' || buttonColor[i].style.color == ''
+						? 'black' : 'white';
+					buttonColor[i].style.backgroundColor = 
+						buttonColor[i].style.backgroundColor == 'black' || 
+						buttonColor[i].style.backgroundColor == "" 
+						? 'white' : 'black';
+				}
+
+
+				// change serach box colors
+				let txtArea = document.getElementById('noOfCards');
+				txtArea.style.backgroundColor =
+					txtArea.style.backgroundColor == 'white' || 
+					txtArea.style.backgroundColor == '' ? 'black' : 'white';
+				txtArea.style.color = 
+					txtArea.style.color == 'black' || txtArea.style.color == '' ?
+					'white' : 'black';
+			}
+			
+		</script>
+
+		<!-- This is what to do after page is loaded -->
+		<script>
+			// detect OS and browser
+			//changeFontSizeUponBrowser('cardToDisplay');
+			function detectBrowser() {
+				let tdSelect = document.getElementsByTagName('td');
+
+				let isChromeAndrord = false;
+				if (navigator.userAgent.indexOf('Android') != -1 && 
+					navigator.userAgent.indexOf('Chrome') != -1 &&
+					navigator.appVersion.indexOf('OPR') === -1) {
+					isChromeAndrord = true;
+				}
+				return isChromeAndrord;
+			}
+			
+			// for testing purpose 
+			let displayTestItemsCount = 5;
+			function displayTestItems() {
+				console.log('Counts left to test tarot: ' + displayTestItemsCount);
+				if (displayTestItemsCount > 0) displayTestItemsCount--;
+				else {
+					displayItem(itemsForTest);
+					displayTestItemsCount = 5;
+				}
+			}
+		</script>
+
+	</table>
+
+</body>
+</html>
